@@ -4,7 +4,7 @@
   "description": "node-express-ts-rest-api",
   "main": "app.js",
   "scripts": {
-    "start": "npm run build && NODE_ENV=production node build/app.js",
+    "start": "npm run build && node build/app.js",
     "dev": "ts-node-dev --respawn --transpile-only app.ts",
     "build": "rm -rf ./build && tsc -p ."
   },
