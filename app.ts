@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 
 // Utilities
 import path from "path";
@@ -20,6 +20,9 @@ import logger from "./App/Helpers/utilities/logger";
 import db from "./App/Helpers/utilities/database";
 import seedDb from "./App/Helpers/utilities/seed";
 
+// Custom Middlewares
+import { error404, errorHandler } from "./App/Helpers/middlewares/errorHandler";
+
 // Port
 const port: number = config.get<number>("server.port");
 
@@ -39,10 +42,14 @@ app.use(
 // Utilities
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 // Use routes
 useRoutes(app);
+
+// Error handling
+app.use(error404);
+app.use(errorHandler);
 
 // Seed the DB
 seedDb();
