@@ -1,7 +1,8 @@
 export default {
   server: {
-    port: 3000,
-    host: "localhost",
+    port: process.env.PORT || 3000,
+    host: process.env.HOST || "localhost",
+    corsOrigin: process.env.CORS_ORIGIN || "http://localhost:3000",
   },
   db: {
     database: process.env.DB_DATABASE_NAME || "node_rest_api",

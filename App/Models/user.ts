@@ -1,4 +1,5 @@
 import { Model, UUIDV4 } from "sequelize";
+import bcrypt from "bcrypt";
 
 interface UserAttributes {
   id: string;
@@ -47,5 +48,16 @@ module.exports = (sequelize: any, DataTypes: any) => {
       modelName: "User",
     }
   );
+  User.beforeCreate((user, options) => {
+    return bcrypt
+      .hash(user.password, 10)
+      .then((hash) => {
+        user.password = hash;
+      })
+      .catch((err) => {
+        throw new Error();
+      });
+  });
+
   return User;
 };

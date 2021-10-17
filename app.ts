@@ -2,6 +2,7 @@ import express, { Application } from "express";
 
 // Utilities
 import path from "path";
+import cors from "cors";
 
 // Configurations
 import dotenv from "dotenv";
@@ -23,6 +24,16 @@ const port: number = config.get<number>("server.port");
 
 // App
 const app: Application = express();
+
+// Cors
+const corsOrigin: string = config.get<string>("server.corsOrigin");
+app.use(
+  cors({
+    origin: corsOrigin,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 
 // Utilities
 app.use(express.static(path.join(__dirname, "public")));
