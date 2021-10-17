@@ -1,17 +1,12 @@
 import { Model, UUIDV4 } from "sequelize";
 import bcrypt from "bcrypt";
-
-interface UserAttributes {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
+import { throwError } from "../Helpers/utilities/error";
+import { UserAttributes } from "../Interfaces/UserInterface";
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class User extends Model<UserAttributes> implements UserAttributes {
     id!: string;
-    name!: string;
+    username!: string;
     email!: string;
     password!: string;
 
@@ -29,9 +24,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
         primaryKey: true,
       },
-      name: {
+      username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       email: {
         type: DataTypes.STRING,
@@ -55,7 +51,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         user.password = hash;
       })
       .catch((err) => {
-        throw new Error();
+        throwError(err.message, err.status);
       });
   });
 

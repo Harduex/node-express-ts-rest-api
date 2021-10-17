@@ -1,10 +1,5 @@
 import { Model } from "sequelize";
-
-interface ProjectAttributes {
-  id: number;
-  title: string;
-  status: string;
-}
+import { ProjectAttributes } from "../Interfaces/ProjectInterface";
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Project extends Model<ProjectAttributes> implements ProjectAttributes {
@@ -24,7 +19,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement:  true
+        autoIncrement: true,
       },
       title: {
         type: DataTypes.STRING,

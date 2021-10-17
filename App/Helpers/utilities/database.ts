@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { Sequelize, Dialect, DataTypes } from "sequelize";
 import config from "config";
+import logger from "./logger";
 
 const database: string = config.get<string>("db.database");
 const username: string = config.get<string>("db.username");
@@ -12,6 +13,9 @@ const dialect = config.get("db.dialect") as Dialect;
 const sequelize = new Sequelize(database, username, password, {
   host: host,
   dialect: dialect,
+  logging: false,
+  // Uncomment if you want db logs
+  // logging: (message) => logger.info(message),
 });
 
 const db: any = {};

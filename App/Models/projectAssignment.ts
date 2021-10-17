@@ -1,18 +1,15 @@
 import { Model } from "sequelize";
-
-interface ProjectAssignmentAttributes {
-  projectId: number;
-  userId: string;
-}
+import { ProjectAssignmentAttributes } from "../Interfaces/ProjectInterface";
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class ProjectAssignment extends Model<ProjectAssignmentAttributes> implements ProjectAssignmentAttributes {
+  class ProjectAssignment
+    extends Model<ProjectAssignmentAttributes>
+    implements ProjectAssignmentAttributes
+  {
     projectId!: number;
     userId!: string;
 
-    static associate(models: any) {
-
-    }
+    static associate(models: any) {}
   }
   ProjectAssignment.init(
     {
@@ -22,8 +19,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         primaryKey: true,
         references: {
           model: "Projects",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       userId: {
         type: DataTypes.UUID,
@@ -31,8 +28,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         primaryKey: true,
         references: {
           model: "Users",
-          key: "id"
-        }
+          key: "id",
+        },
       },
     },
     {

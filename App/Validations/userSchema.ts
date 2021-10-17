@@ -2,8 +2,8 @@ import { object, string, TypeOf } from "zod";
 
 const createUserSchema = object({
   body: object({
-    name: string({
-      required_error: "Name is required",
+    username: string({
+      required_error: "Username is required",
     }),
     password: string({
       required_error: "Password is required",
@@ -20,4 +20,15 @@ const createUserSchema = object({
   }),
 });
 
-export { createUserSchema };
+const logInUserSchema = object({
+  body: object({
+    username: string({
+      required_error: "Username is required",
+    }),
+    password: string({
+      required_error: "Password is required",
+    })
+  }),
+});
+
+export { createUserSchema, logInUserSchema };
