@@ -18,6 +18,7 @@ const signJWT = (
       {
         id: user.id,
         username: user.username,
+        email: user.email,
       },
       config.get("server.token.secret"),
       {

@@ -8,7 +8,7 @@ import signJWT from "../Helpers/utilities/signJWT";
 import extractJWT from "../Helpers/middlewares/extractJWT";
 import { UserAttributes } from "../Interfaces/UserInterface";
 import logger from "../Helpers/utilities/logger";
-import jsonStringifySafe from "json-stringify-safe";
+import HttpStatusCode from "../Enums/HttpStatusCodes";
 import config from "config";
 
 const router: Router = express.Router();
@@ -25,16 +25,16 @@ router.post("/register", validateResource(createUserSchema), async (req, res, ne
     const newUser: UserAttributes | null = await db.User.create(user);
     if (newUser != null) {
       logger.info(`User with id: ${newUser.id} created`);
-      return res.status(201).json({
+      return res.status(HttpStatusCode.OK).json({
         id: newUser.id,
         username: newUser.username,
         email: newUser.email,
       });
     } else {
-      next(throwError("Server Error", 500));
+      next(throwError("Server Error", HttpStatusCode.INTERNAL_SERVER_ERROR));
     }
   } catch (error: any) {
-    next(throwError(error.message, 500));
+    next(throwError(error.message, HttpStatusCode.INTERNAL_SERVER_ERROR));
   }
 });
 
@@ -50,13 +50,13 @@ router.post("/login", validateResource(logInUserSchema), async (req, res, next) 
   if (user != null) {
     bcryptjs.compare(password, user.password, (error: any, result: boolean) => {
       if (error || !result) {
-        next(throwError("Wrong password or username", 401));
+        next(throwError("Wrong password or username", HttpStatusCode.UNAUTHORIZED));
       } else if (result) {
         signJWT(user, (_error, token) => {
           if (_error) {
-            next(throwError("Unable to Sign JWT", 401));
+            next(throwError("Unable to Sign JWT", HttpStatusCode.UNAUTHORIZED));
           } else if (token) {
-            return res.status(200).json({
+            return res.status(HttpStatusCode.OK).json({
               message: "Authorized",
               token: token,
               expireTime: config.get("server.token.expireTime"),
@@ -77,7 +77,7 @@ router.post("/login", validateResource(logInUserSchema), async (req, res, next) 
 
 router.get("/get/all", async (req, res) => {
   const users = await db.User.findAll({ attributes: ["id", "username", "email"] });
-  res.status(200).json({
+  res.status(HttpStatusCode.OK).json({
     users: users,
     count: users.length,
   });
@@ -85,15 +85,7 @@ router.get("/get/all", async (req, res) => {
 
 router.get("/get/current", extractJWT, async (req, res) => {
   const user = res.locals.user;
-
-  const userFull: UserAttributes | null = await db.User.findOne({
-    where: {
-      username: user.username,
-    },
-    attributes: ["id", "username", "email"],
-  });
-
-  res.status(200).send(userFull);
+  res.status(HttpStatusCode.OK).send(user);
 });
 
 export default router;

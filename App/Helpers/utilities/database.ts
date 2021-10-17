@@ -8,10 +8,12 @@ const database: string = config.get<string>("db.database");
 const username: string = config.get<string>("db.username");
 const password: string = config.get<string>("db.password");
 const host: string = config.get<string>("db.host");
+const port: number = config.get<number>("db.port");
 const dialect = config.get("db.dialect") as Dialect;
 
 const sequelize = new Sequelize(database, username, password, {
   host: host,
+  port: port,
   dialect: dialect,
   logging: false,
   // Uncomment if you want db logs
