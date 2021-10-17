@@ -3,6 +3,7 @@ import express, { Application } from "express";
 // Utilities
 import path from "path";
 import cors from "cors";
+import morgan from "morgan";
 
 // Configurations
 import dotenv from "dotenv";
@@ -38,6 +39,7 @@ app.use(
 // Utilities
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
+app.use(morgan('dev'));
 
 // Use routes
 useRoutes(app);
