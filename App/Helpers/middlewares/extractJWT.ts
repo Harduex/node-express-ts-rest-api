@@ -5,7 +5,7 @@ import config from "config";
 import { throwError } from "../utilities/error";
 import HttpStatusCode from "../../Enums/HttpStatusCodes";
 
-const extractJWT = (req: Request, res: Response, next: NextFunction) => {
+const checkAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   logger.info("Validating token");
 
   const token = req.headers.authorization;
@@ -28,4 +28,4 @@ const extractJWT = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default extractJWT;
+export default checkAuthenticated;
