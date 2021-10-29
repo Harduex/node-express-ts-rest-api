@@ -5,9 +5,9 @@ import authRouter from "./App/Controllers/authContoller";
 import checkAuthenticated from "./App/Helpers/middlewares/extractJWT";
 
 const routes = (app: Application) => {
-  app.use("/api", checkAuthenticated, indexRouter);
-  app.use("/api/auth", authRouter);
-  app.use("/api/users", checkAuthenticated, userRouter);
+  app.use("/", indexRouter);
+  app.use("/auth", authRouter);
+  app.use("/users", checkAuthenticated, userRouter);
 };
 
 export default routes;

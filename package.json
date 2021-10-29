@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run build && node build/app.js",
     "dev": "ts-node-dev --respawn --transpile-only app.ts",
-    "build": "rm -rf ./build && tsc -p ."
+    "build": "rm -rf ./build && tsc -p .",
+    "generate-secret": "node -e \"console.log(require('crypto').randomBytes(256).toString('base64'));\""
   },
   "repository": {
     "type": "git",

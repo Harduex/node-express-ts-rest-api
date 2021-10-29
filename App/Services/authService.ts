@@ -1,17 +1,22 @@
-import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import config from "config";
-import { UserAttributes } from "../../Interfaces/UserInterface";
-import logger from "./logger";
+import logger from "../Helpers/utilities/logger";
+import jwt from "jsonwebtoken";
+import { UserAttributes } from "../Interfaces/UserInterface";
 
-const signJWT = (
+async function validatePassword(password: string, passwordHash: string) {
+  try {
+    return await bcrypt.compare(password, passwordHash);
+  } catch (error: any) {
+    throw new Error("Validation Error");
+  }
+}
+
+function signJWT(
   user: UserAttributes,
   callback: (error: Error | null, token: string | null) => void
-): void => {
+): void {
   const expirationTime = config.get<any>("server.token.expireTime");
-
-  logger.info(
-    `Attempting to sign token for user with id ${user.id}, expires in ${expirationTime}`
-  );
 
   try {
     jwt.sign(
@@ -27,17 +32,14 @@ const signJWT = (
         expiresIn: expirationTime,
       },
       (error, token) => {
-        if (error) {
-          callback(error, null);
-        } else if (token) {
-          callback(null, token);
-        }
+        if (token) return callback(null, token);
+        return callback(error, null);
       }
     );
   } catch (error: any) {
     logger.error(error.message, error);
     callback(error, null);
   }
-};
+}
 
-export default signJWT;
+export { validatePassword, signJWT };

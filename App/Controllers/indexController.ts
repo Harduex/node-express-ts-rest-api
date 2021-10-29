@@ -4,7 +4,7 @@ import checkAuthenticated from "../Helpers/middlewares/extractJWT";
 
 const router: Router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", checkAuthenticated, async (req, res) => {
   const user = res.locals.user;
 
   res.json({
