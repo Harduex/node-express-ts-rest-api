@@ -109,3 +109,8 @@ config/local.ts
 # build folder
 
 build/
+
+# https
+key.pem
+keytmp.pem
+cert.pem

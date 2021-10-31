@@ -8,6 +8,7 @@ export default {
       issuer: process.env.TOKEN_ISSUER || "coolIssuerr",
       secret: process.env.TOKEN_SECRET || "superencryptedsecret",
     },
+    https: true,
   },
   db: {
     database: process.env.DB_DATABASE_NAME || "node_rest_api",

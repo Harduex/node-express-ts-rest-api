@@ -4,11 +4,15 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import path from "path";
 import cors from "cors";
 import morgan from "morgan";
+import fs from "fs";
 
 // Configurations
 import dotenv from "dotenv";
 dotenv.config();
 import config from "config";
+
+// https
+import https from "https";
 
 // Routes
 import useRoutes from "./routes";
@@ -56,11 +60,33 @@ app.use(errorHandler);
 seedDb();
 
 // DB connection and start server
-db.sequelize.sync().then(() => {
-  app.listen(port, async () => {
-    logger.info(`DB connected on ${config.get('db.host')}:${config.get('db.port')}`);
-    logger.info(`App listening on port ${port}`);
+db.sequelize
+  .sync()
+  .then(() => {
+    logger.info(
+      `DB connected on ${config.get("db.host")}:${config.get("db.port")}`
+    );
+
+    if (config.get<boolean>("server.https")) {
+      // Https Server
+      https
+        .createServer(
+          {
+            key: fs.readFileSync("./key.pem"),
+            cert: fs.readFileSync("./cert.pem"),
+          },
+          app
+        )
+        .listen(port, function () {
+          logger.info(`HTTPS Server listening on port ${port}`);
+        });
+    } else {
+      // Http server
+      app.listen(port, async () => {
+        logger.info(`HTTP Server listening on port ${port}`);
+      });
+    }
+  })
+  .catch((error: any) => {
+    logger.error(`Unable to connect to the database: ${error}`);
   });
-}).catch((error: any) => {
-  logger.error(`Unable to connect to the database: ${error}`);
-});
